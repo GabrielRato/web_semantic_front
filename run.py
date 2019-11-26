@@ -3,7 +3,7 @@ import os
 
 import json
 from flask import Flask, request, jsonify, render_template
-import request
+import requests
 
 app = Flask(__name__)
 
@@ -12,15 +12,30 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/store/<store_id>', methods=['POST','GET'])
-@app.route('/store/', methods=['POST','GET'])
-def store(store_id=None):
+@app.route('/store/<search_term>', methods=['POST','GET'])
+def search_store(search_term=None):
+
+    response_data = []
+
     # get all stores than filter...
     r = requests.get('https://ws-music-gallery-system.herokuapp.com/store/get-all')
-    data = json.loads(r.text)
-    
-    #TO-DO implementar logica para tratar o id, buscando do Aug
-    return render_template('stores.html')
+    if r.status_code == 200:
+        data_store = json.loads(r.text)
+    else:
+        data_store = []
+
+    #look for stores with name like searched
+    for store in data_store:
+        if search_term in store['name']:
+            response_data.append(store)
+
+    # TO-DO draw those pages
+    if len(response_data) == 0:
+        return render_template('store_not_found.html')
+    elif len(response_data) > 1:
+        return render_template('store_list.html', store_list=response_data)
+    else:
+        return render_template('store.html', store_data=response_data)
 
 
 if __name__ == '__main__':
