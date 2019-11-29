@@ -33,10 +33,12 @@
 						Morbi leo risus orta ac consectetur </h6>
 						<br>
 		      <ul class="list-group list-group-flush">
-			      <li class="list-group-item">Cras justo odio
+						{ % for product in store_product % }
+			      <li class="list-group-item"> {{ product.name }}
 				      <a href="#" style="" class="fas fa-plus"></a>
 				      <a href="#" style="" class="fas fa-minus"></a>
 			      </li>
+						{ % endfor %}
 					  <li class="list-group-item">Dapibus ac facilisis in</li>
 					  <li class="list-group-item">Morbi leo risus</li>
 					  <li class="list-group-item">Porta ac consectetur ac</li>
